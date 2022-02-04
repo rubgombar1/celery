@@ -358,6 +358,7 @@ class Scheduler(object):
                 verify_time = verify[0]
                 if verify_time > SECONDS_TO_ADVISE:
                     debug(f'[CELERY_SLEEPYHEAD][VERIFY_IS_NOT_EVENT]: {verify_time} seconds')
+                    debug(f'[CELERY_SLEEPYHEAD][VERIFY_IS_NOT_EVENT][VERIFY]: {str(verify)}')
                     try:
                         debug(f'[CELERY_SLEEPYHEAD][VERIFY_IS_NOT_EVENT]: ' + "\n".join([str(x) for x in H]))
                     except:
