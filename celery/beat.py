@@ -207,6 +207,9 @@ class ScheduleEntry(object):
         return not self == other
 
 
+SECONDS_TO_ADVISE = 15
+
+
 class Scheduler(object):
     """Scheduler for periodic tasks.
 
@@ -331,6 +334,8 @@ class Scheduler(object):
         H = self._heap
 
         if not H:
+            if max_interval > SECONDS_TO_ADVISE:
+                debug(f'[NOT_H]: {max_interval} seconds')
             return max_interval
 
         event = H[0]
@@ -346,8 +351,14 @@ class Scheduler(object):
                 return 0
             else:
                 heappush(H, verify)
-                return min(verify[0], max_interval)
-        return min(adjust(next_time_to_run) or max_interval, max_interval)
+                verify_time = verify[0]
+                if verify_time > SECONDS_TO_ADVISE:
+                    debug(f'[VERIFY_IS_NOT_EVENT]: {verify_time} seconds')
+                return min(verify_time, max_interval)
+        next_time = adjust(next_time_to_run)
+        if next_time > SECONDS_TO_ADVISE:
+            debug(f'[IS_DUE_FALSE]: {next_time} seconds')
+        return min(next_time or max_interval, max_interval)
 
     def schedules_equal(self, old_schedules, new_schedules):
         if old_schedules is new_schedules is None:
