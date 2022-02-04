@@ -335,9 +335,9 @@ class Scheduler(object):
 
         if not H:
             if max_interval > SECONDS_TO_ADVISE:
-                debug(f'[NOT_H]: {max_interval} seconds')
+                debug(f'[CELERY_SLEEPYHEAD][NOT_H]: {max_interval} seconds')
                 try:
-                    debug(f'[CELERY_SLEEPYHEAD][NOT_H]: {max_interval} seconds')
+                    debug('[CELERY_SLEEPYHEAD][NOT_H]: ' + "\n".join([str(x) for x in H]))
                 except:
                     debug('[CELERY_SLEEPYHEAD][NOT_H]: XXXX')
             return max_interval
@@ -357,17 +357,17 @@ class Scheduler(object):
                 heappush(H, verify)
                 verify_time = verify[0]
                 if verify_time > SECONDS_TO_ADVISE:
-                    debug(f'[VERIFY_IS_NOT_EVENT]: {verify_time} seconds')
+                    debug(f'[CELERY_SLEEPYHEAD][VERIFY_IS_NOT_EVENT]: {verify_time} seconds')
                     try:
-                        debug(f'[CELERY_SLEEPYHEAD][VERIFY_IS_NOT_EVENT]: {max_interval} seconds')
+                        debug(f'[CELERY_SLEEPYHEAD][VERIFY_IS_NOT_EVENT]: ' + "\n".join([str(x) for x in H]))
                     except:
                         debug('[CELERY_SLEEPYHEAD][VERIFY_IS_NOT_EVENT]: XXXX')
                 return min(verify_time, max_interval)
         next_time = adjust(next_time_to_run)
         if next_time > SECONDS_TO_ADVISE:
-            debug(f'[IS_DUE_FALSE]: {next_time} seconds')
+            debug(f'[CELERY_SLEEPYHEAD][IS_DUE_FALSE]: {next_time} seconds')
             try:
-                debug(f'[CELERY_SLEEPYHEAD][IS_DUE_FALSE]: {max_interval} seconds')
+                debug(f'[CELERY_SLEEPYHEAD][IS_DUE_FALSE]: ' + "\n".join([str(x) for x in H]))
             except:
                 debug('[CELERY_SLEEPYHEAD][IS_DUE_FALSE]: XXXX')
         return min(next_time or max_interval, max_interval)
