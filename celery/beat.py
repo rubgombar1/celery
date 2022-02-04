@@ -336,6 +336,10 @@ class Scheduler(object):
         if not H:
             if max_interval > SECONDS_TO_ADVISE:
                 debug(f'[NOT_H]: {max_interval} seconds')
+                try:
+                    debug(f'[CELERY_SLEEPYHEAD][NOT_H]: {max_interval} seconds')
+                except:
+                    debug('[CELERY_SLEEPYHEAD][NOT_H]: XXXX')
             return max_interval
 
         event = H[0]
@@ -354,10 +358,18 @@ class Scheduler(object):
                 verify_time = verify[0]
                 if verify_time > SECONDS_TO_ADVISE:
                     debug(f'[VERIFY_IS_NOT_EVENT]: {verify_time} seconds')
+                    try:
+                        debug(f'[CELERY_SLEEPYHEAD][VERIFY_IS_NOT_EVENT]: {max_interval} seconds')
+                    except:
+                        debug('[CELERY_SLEEPYHEAD][VERIFY_IS_NOT_EVENT]: XXXX')
                 return min(verify_time, max_interval)
         next_time = adjust(next_time_to_run)
         if next_time > SECONDS_TO_ADVISE:
             debug(f'[IS_DUE_FALSE]: {next_time} seconds')
+            try:
+                debug(f'[CELERY_SLEEPYHEAD][IS_DUE_FALSE]: {max_interval} seconds')
+            except:
+                debug('[CELERY_SLEEPYHEAD][IS_DUE_FALSE]: XXXX')
         return min(next_time or max_interval, max_interval)
 
     def schedules_equal(self, old_schedules, new_schedules):
