@@ -662,8 +662,10 @@ class Service(object):
                     if self.scheduler.should_sync():
                         self.scheduler._do_sync()
         except (KeyboardInterrupt, SystemExit):
+            debug('[EXCEPTIONS_DEBUG] Except')
             self._is_shutdown.set()
         finally:
+            debug('[EXCEPTIONS_DEBUG] Finally')
             self.sync()
 
     def sync(self):
