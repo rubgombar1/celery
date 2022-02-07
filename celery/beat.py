@@ -323,6 +323,7 @@ class Scheduler(object):
         Returns:
             float: preferred delay in seconds for next call.
         """
+        debug('[INITIAL_TICK]: START TICK')
         adjust = self.adjust
         max_interval = self.max_interval
 
@@ -654,7 +655,7 @@ class Service(object):
             while not self._is_shutdown.is_set():
                 interval = self.scheduler.tick()
                 if interval and interval > 0.0:
-                    debug('beat: Waking up %s.',
+                    debug('[CUSTOM_CELERY] beat: Waking up %s.',
                           humanize_seconds(interval, prefix='in '))
                     time.sleep(interval)
                     if self.scheduler.should_sync():
