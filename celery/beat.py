@@ -335,12 +335,12 @@ class Scheduler(object):
         H = self._heap
 
         if not H:
+            debug(f'[CELERY_SLEEPYHEAD][NOT_H]: {max_interval} seconds')
             if max_interval > SECONDS_TO_ADVISE:
-                debug(f'[CELERY_SLEEPYHEAD][NOT_H]: {max_interval} seconds')
                 try:
-                    debug('[CELERY_SLEEPYHEAD][NOT_H]: ' + "\n".join([str(x) for x in H]))
+                    debug('[CELERY_SLEEPYHEAD][MAX_INTERVAL][NOT_H]: ' + "\n".join([str(x) for x in H]))
                 except:
-                    debug('[CELERY_SLEEPYHEAD][NOT_H]: XXXX')
+                    debug('[CELERY_SLEEPYHEAD][MAX_INTERVAL][NOT_H]: XXXX')
             return max_interval
 
         event = H[0]
@@ -353,25 +353,26 @@ class Scheduler(object):
                 self.apply_entry(entry, producer=self.producer)
                 heappush(H, event_t(self._when(next_entry, next_time_to_run),
                                     event[1], next_entry))
+                debug(f'[CELERY_SLEEPYHEAD][VERIFY_IS_EVENT][VERIFY]: {str(verify)}')
                 return 0
             else:
                 heappush(H, verify)
                 verify_time = verify[0]
+                debug(f'[CELERY_SLEEPYHEAD][VERIFY_IS_NOT_EVENT]: {verify_time} seconds')
+                debug(f'[CELERY_SLEEPYHEAD][VERIFY_IS_NOT_EVENT][VERIFY]: {str(verify)}')
                 if verify_time > SECONDS_TO_ADVISE:
-                    debug(f'[CELERY_SLEEPYHEAD][VERIFY_IS_NOT_EVENT]: {verify_time} seconds')
-                    debug(f'[CELERY_SLEEPYHEAD][VERIFY_IS_NOT_EVENT][VERIFY]: {str(verify)}')
                     try:
-                        debug(f'[CELERY_SLEEPYHEAD][VERIFY_IS_NOT_EVENT]: ' + "\n".join([str(x) for x in H]))
+                        debug(f'[CELERY_SLEEPYHEAD][MAX_INTERVAL][VERIFY_IS_NOT_EVENT]: ' + "\n".join([str(x) for x in H]))
                     except:
-                        debug('[CELERY_SLEEPYHEAD][VERIFY_IS_NOT_EVENT]: XXXX')
+                        debug('[CELERY_SLEEPYHEAD][MAX_INTERVAL][VERIFY_IS_NOT_EVENT]: XXXX')
                 return min(verify_time, max_interval)
         next_time = adjust(next_time_to_run)
+        debug(f'[CELERY_SLEEPYHEAD][IS_DUE_FALSE]: {next_time} seconds')
         if next_time > SECONDS_TO_ADVISE:
-            debug(f'[CELERY_SLEEPYHEAD][IS_DUE_FALSE]: {next_time} seconds')
             try:
-                debug(f'[CELERY_SLEEPYHEAD][IS_DUE_FALSE]: ' + "\n".join([str(x) for x in H]))
+                debug(f'[CELERY_SLEEPYHEAD][MAX_INTERVAL][IS_DUE_FALSE]: ' + "\n".join([str(x) for x in H]))
             except:
-                debug('[CELERY_SLEEPYHEAD][IS_DUE_FALSE]: XXXX')
+                debug('[CELERY_SLEEPYHEAD][MAX_INTERVAL][IS_DUE_FALSE]: XXXX')
         return min(next_time or max_interval, max_interval)
 
     def schedules_equal(self, old_schedules, new_schedules):
