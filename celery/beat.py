@@ -25,6 +25,7 @@ from . import __version__, platforms, signals
 from .five import (items, monotonic, python_2_unicode_compatible, reraise,
                    values)
 from .schedules import crontab, maybe_schedule
+from .utils.functional import is_numeric_value
 from .utils.imports import load_extension_class_names, symbol_by_name
 from .utils.log import get_logger, iter_open_logger_fds
 from .utils.time import humanize_seconds, maybe_make_aware
@@ -347,7 +348,9 @@ class Scheduler(object):
             else:
                 heappush(H, verify)
                 return min(verify[0], max_interval)
-        return min(adjust(next_time_to_run) or max_interval, max_interval)
+        adjusted_next_time_to_run = adjust(next_time_to_run)
+        return min(adjusted_next_time_to_run if is_numeric_value(adjusted_next_time_to_run) else max_interval,
+                   max_interval)
 
     def schedules_equal(self, old_schedules, new_schedules):
         if old_schedules is new_schedules is None:
