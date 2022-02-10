@@ -14,7 +14,7 @@ except (AttributeError, ImportError):
     def _pyimp():
         return 'Python (unknown)'
 
-NAME = 'celery'
+NAME = 'celery-joinup'
 
 # -*- Python Versions -*-
 
@@ -220,7 +220,7 @@ setuptools.setup(
     },
     project_urls={
         "Documentation": "http://docs.celeryproject.org/en/latest/index.html",
-        "Code": "https://github.com/celery/celery",
+        "Code": "https://github.com/we-are-Joinup/celery",
         "Tracker": "https://github.com/celery/celery/issues",
         "Funding": "https://opencollective.com/celery"
     },
